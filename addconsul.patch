@@ -1,0 +1,12 @@
+18c18,26
+< 	if [ "$CASSANDRA_BROADCAST_ADDRESS" = 'auto' ]; then
+---
+> 	if [ "$CASSANDRA_BROADCAST_ADDRESS" = 'fromec2' ]; then
+> 		hostip=$(curl -s http://169.254.169.254/latest/meta-data/local-ipv4)
+> 		echo "got host IP $hostip"
+> 		CASSANDRA_BROADCAST_ADDRESS="$hostip"
+> 	elif [ "$CASSANDRA_BROADCAST_ADDRESS" = 'fromconsul' ]; then
+> 		hostip=$(curl -s http://consul.service.consul/v1/catalog/node/$(hostname) | jq '.Node.Address')
+> 		echo "got host IP $hostip"
+> 		CASSANDRA_BROADCAST_ADDRESS="$hostip"
+> 	elif [ "$CASSANDRA_BROADCAST_ADDRESS" = 'auto' ]; then
