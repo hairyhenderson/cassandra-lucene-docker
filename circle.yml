@@ -1,0 +1,16 @@
+machine:
+  services:
+    - docker
+
+dependencies:
+  override:
+    - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+    - docker build -t qlik/cassandra-lucene:latest .
+    - docker tag -f qlik/cassandra-lucene:latest qlik/cassandra-lucene:2.1
+    - docker tag -f qlik/cassandra-lucene:latest qlik/cassandra-lucene:2.1.10
+
+deployment:
+  hub:
+    branch: master
+    commands:
+      - docker push qlik/cassandra-lucene
